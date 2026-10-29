@@ -1,0 +1,11 @@
+{
+  "version": "0.1",
+  "connections": [
+    {
+      "details": {
+        "path": "C:\\Users\\Akshatha\\OneDrive\\Desktop\\TIC TAC\\retail_sales_analytics\\data\\processed\\retail_sales_clean.csv"
+      },
+      "connectionType": "File"
+    }
+  ]
+}

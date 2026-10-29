@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Retail Corp - Power BI Executive Analytics Dashboard</title>
+    <!-- Chart.js for interactive visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1E3A8A;
+            --primary-light: #3B82F6;
+            --secondary: #334155;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --bg-canvas: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            padding: 16px 24px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .slicer-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .slicer-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .slicer-select {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #fff;
+            font-size: 13px;
+            color: var(--text-main);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(30, 58, 138, 0.2);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #E2E8F0;
+        }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            padding: 18px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-light);
+        }
+
+        .kpi-card.emerald::before { background: var(--success); }
+        .kpi-card.amber::before { background: var(--warning); }
+        .kpi-card.danger::before { background: var(--danger); }
+
+        .kpi-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Chart Visuals Layout */
+        .visual-grid-2 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .visual-grid-equal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .chart-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .chart-header span {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Tab Content Control */
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Table Styling */
+        .data-table-container {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        table.styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table.styled-table th {
+            background: #F1F5F9;
+            color: var(--secondary);
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        table.styled-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        table.styled-table tr:hover {
+            background-color: #F8FAFC;
+        }
+
+        .badge-loss {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-profit {
+            background: #D1FAE5;
+            color: #059669;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-vip {
+            background: #E0E7FF;
+            color: #4338CA;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .callout-box {
+            background: #EFF6FF;
+            border-left: 4px solid var(--primary-light);
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #1E40AF;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Interactive Slicers -->
+    <div class="header">
+        <div class="header-title">
+            <h1>Global Retail Corp &mdash; Executive Analytics Dashboard</h1>
+            <p>Interactive Power BI Web Replica | Multi-Year Transaction Portfolio (2023 - 2026)</p>
+        </div>
+        <div class="slicer-bar">
+            <span class="slicer-label">Filter View:</span>
+            <select class="slicer-select" id="regionFilter" onchange="applyFilters()">
+                <option value="All">All Regions (4)</option>
+                <option value="West">West Region</option>
+                <option value="Central">Central Region</option>
+                <option value="South">South Region</option>
+                <option value="East">East Region</option>
+            </select>
+            <select class="slicer-select" id="catFilter" onchange="applyFilters()">
+                <option value="All">All Categories (3)</option>
+                <option value="Technology">Technology</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Office Supplies">Office Supplies</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs (3 Dashboard Pages) -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('page1', this)">1. Executive Overview</button>
+        <button class="tab-btn" onclick="switchTab('page2', this)">2. Product & Profitability Deep-Dive</button>
+        <button class="tab-btn" onclick="switchTab('page3', this)">3. Customer & Regional Opportunities</button>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- PAGE 1: EXECUTIVE OVERVIEW -->
+    <!-- =================================================================== -->
+    <div id="page1" class="tab-panel active">
+        <!-- Top KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Total Sales Revenue</div>
+                <div class="kpi-value" id="kpiSales">$9.61M</div>
+                <div class="kpi-sub">Gross Net Invoiced</div>
+            </div>
+            <div class="kpi-card emerald">
+                <div class="kpi-title">Total Net Profit</div>
+                <div class="kpi-value" id="kpiProfit">$1.20M</div>
+                <div class="kpi-sub">Bottom-Line Realized</div>
+            </div>
+            <div class="kpi-card emerald">
+                <div class="kpi-title">Overall Profit Margin</div>
+                <div class="kpi-value" id="kpiMargin">12.5%</div>
+                <div class="kpi-sub">Target: &ge; 12.0%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Total Purchase Orders</div>
+                <div class="kpi-value" id="kpiOrders">10,000</div>
+                <div class="kpi-sub">10,039 Line Items</div>
+            </div>
+            <div class="kpi-card amber">
+                <div class="kpi-title">Average Order Value (AOV)</div>
+                <div class="kpi-value" id="kpiAOV">$961.21</div>
+                <div class="kpi-sub">Mean Revenue / Order</div>
+            </div>
+        </div>
+
+        <div class="visual-grid-2">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Monthly Sales Revenue vs. Net Profit Trend (2023 - 2026)</h3>
+                    <span>Time Intelligence / Seasonality Surges</span>
+                </div>
+                <canvas id="monthlyTrendChart" height="110"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Sales Share by Category</h3>
+                    <span>Technology Dominates (63.1%)</span>
+                </div>
+                <canvas id="categoryDonutChart" height="180"></canvas>
+            </div>
+        </div>
+
+        <div class="visual-grid-equal">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Regional Sales & Profit Margin Performance</h3>
+                    <span>West ($3.18M) & Central ($2.90M) Lead Sales Volume</span>
+                </div>
+                <canvas id="regionalBarChart" height="140"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Customer Segment Revenue Breakdown</h3>
+                    <span>Consumer ($5.03M) | Corporate ($2.87M) | Home Office ($1.72M)</span>
+                </div>
+                <canvas id="segmentBarChart" height="140"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- PAGE 2: PRODUCT & PROFITABILITY DEEP-DIVE -->
+    <!-- =================================================================== -->
+    <div id="page2" class="tab-panel">
+        <div class="callout-box">
+            <strong>Critical Finding:</strong> Discounting beyond 20% drops profit margins from <strong>+23.0% (at 0% discount)</strong> to <strong>-8.9% (21-40% tier)</strong> and <strong>-38.5% (>40% deep discount)</strong>. Capping discounts on Tables and Bookcases can reclaim up to <strong>$253,959 in lost EBITDA</strong>.
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card danger">
+                <div class="kpi-title">Distressed Lines (>20% Discount)</div>
+                <div class="kpi-value">1,585</div>
+                <div class="kpi-sub">Operating at Net Loss</div>
+            </div>
+            <div class="kpi-card danger">
+                <div class="kpi-title">Tables & Bookcases Loss</div>
+                <div class="kpi-value">-$372.78K</div>
+                <div class="kpi-sub">Negative Cumulative Margin</div>
+            </div>
+            <div class="kpi-card emerald">
+                <div class="kpi-title">Copiers Profit Contribution</div>
+                <div class="kpi-value">+$1.14M</div>
+                <div class="kpi-sub">33.9% Net Margin</div>
+            </div>
+            <div class="kpi-card emerald">
+                <div class="kpi-title">Potential Reclaimed EBITDA</div>
+                <div class="kpi-value">+$253.96K</div>
+                <div class="kpi-sub">Via Policy Discount Cap @ 20%</div>
+            </div>
+        </div>
+
+        <div class="visual-grid-equal">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Product Sub-Category Profit Matrix</h3>
+                    <span>Red Indicates Severe Profit Drag Subcategories</span>
+                </div>
+                <canvas id="subcatProfitChart" height="220"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Discount Tier vs. Realized Profit Margin (%)</h3>
+                    <span>Precipitous Drop into Negative Returns Beyond 20%</span>
+                </div>
+                <canvas id="discountMarginChart" height="220"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Top 5 Profitable vs. Bottom 5 Loss-Making Products</h3>
+                <span>SKU Granular Profit Distribution</span>
+            </div>
+            <div class="data-table-container">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Product Description</th>
+                            <th>Category</th>
+                            <th>Sub-Category</th>
+                            <th>Units Sold</th>
+                            <th>Total Sales</th>
+                            <th>Total Profit / Loss</th>
+                            <th>Profit Margin %</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Canon ImageRunner Enterprise Copier</td>
+                            <td>Technology</td>
+                            <td>Copiers</td>
+                            <td>860</td>
+                            <td>$2,058,750</td>
+                            <td style="color:#059669; font-weight:700;">+$778,036</td>
+                            <td>37.8%</td>
+                            <td><span class="badge-profit">STAR PERFORMER</span></td>
+                        </tr>
+                        <tr>
+                            <td>HP LaserJet Enterprise MFP 500</td>
+                            <td>Technology</td>
+                            <td>Copiers</td>
+                            <td>852</td>
+                            <td>$1,301,080</td>
+                            <td style="color:#059669; font-weight:700;">+$360,903</td>
+                            <td>27.7%</td>
+                            <td><span class="badge-profit">STAR PERFORMER</span></td>
+                        </tr>
+                        <tr>
+                            <td>Samsung Galaxy S23 Ultra</td>
+                            <td>Technology</td>
+                            <td>Phones</td>
+                            <td>879</td>
+                            <td>$726,968</td>
+                            <td style="color:#059669; font-weight:700;">+$117,656</td>
+                            <td>16.2%</td>
+                            <td><span class="badge-profit">PROFITABLE</span></td>
+                        </tr>
+                        <tr>
+                            <td>Apple iPhone 14 Pro 128GB</td>
+                            <td>Technology</td>
+                            <td>Phones</td>
+                            <td>831</td>
+                            <td>$628,642</td>
+                            <td style="color:#059669; font-weight:700;">+$109,086</td>
+                            <td>17.4%</td>
+                            <td><span class="badge-profit">PROFITABLE</span></td>
+                        </tr>
+                        <tr>
+                            <td>Google Pixel 8 Pro</td>
+                            <td>Technology</td>
+                            <td>Phones</td>
+                            <td>804</td>
+                            <td>$535,707</td>
+                            <td style="color:#059669; font-weight:700;">+$63,034</td>
+                            <td>11.8%</td>
+                            <td><span class="badge-profit">PROFITABLE</span></td>
+                        </tr>
+                        <tr style="background:#FFF1F2;">
+                            <td>Bush Business Conference Table 8ft</td>
+                            <td>Furniture</td>
+                            <td>Tables</td>
+                            <td>771</td>
+                            <td>$599,521</td>
+                            <td style="color:#DC2626; font-weight:700;">-$142,111</td>
+                            <td>-23.7%</td>
+                            <td><span class="badge-loss">HEAVY LOSS</span></td>
+                        </tr>
+                        <tr style="background:#FFF1F2;">
+                            <td>Uplift V2 Standing Executive Desk</td>
+                            <td>Furniture</td>
+                            <td>Tables</td>
+                            <td>859</td>
+                            <td>$499,046</td>
+                            <td style="color:#DC2626; font-weight:700;">-$97,655</td>
+                            <td>-19.6%</td>
+                            <td><span class="badge-loss">HEAVY LOSS</span></td>
+                        </tr>
+                        <tr style="background:#FFF1F2;">
+                            <td>Safco Training Seminar Flip Table</td>
+                            <td>Furniture</td>
+                            <td>Tables</td>
+                            <td>-</td>
+                            <td>$270,779</td>
+                            <td style="color:#DC2626; font-weight:700;">-$56,295</td>
+                            <td>-20.8%</td>
+                            <td><span class="badge-loss">HEAVY LOSS</span></td>
+                        </tr>
+                        <tr style="background:#FFF1F2;">
+                            <td>Sauder Heritage Library Bookcase</td>
+                            <td>Furniture</td>
+                            <td>Bookcases</td>
+                            <td>-</td>
+                            <td>$233,633</td>
+                            <td style="color:#DC2626; font-weight:700;">-$46,990</td>
+                            <td>-20.1%</td>
+                            <td><span class="badge-loss">HEAVY LOSS</span></td>
+                        </tr>
+                        <tr style="background:#FFF1F2;">
+                            <td>Bush Furniture 5-Shelf Bookcase</td>
+                            <td>Furniture</td>
+                            <td>Bookcases</td>
+                            <td>-</td>
+                            <td>$148,923</td>
+                            <td style="color:#DC2626; font-weight:700;">-$29,733</td>
+                            <td>-20.0%</td>
+                            <td><span class="badge-loss">HEAVY LOSS</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- PAGE 3: CUSTOMER & REGIONAL OPPORTUNITIES -->
+    <!-- =================================================================== -->
+    <div id="page3" class="tab-panel">
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Total Customer Accounts</div>
+                <div class="kpi-value">650</div>
+                <div class="kpi-sub">Across 50 States</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Orders Per Customer</div>
+                <div class="kpi-value">15.44</div>
+                <div class="kpi-sub">High Repeat Frequency</div>
+            </div>
+            <div class="kpi-card emerald">
+                <div class="kpi-title">Home Office AOV Leader</div>
+                <div class="kpi-value">$1,005.23</div>
+                <div class="kpi-sub">Highest Margin: 13.50%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Avg Fulfillment SLA</div>
+                <div class="kpi-value">3.54 Days</div>
+                <div class="kpi-sub">Ship Mode SLA Compliant</div>
+            </div>
+        </div>
+
+        <div class="visual-grid-equal">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Top 10 States by Sales Revenue</h3>
+                    <span>California ($1.29M) & Texas ($1.00M) Represent Over 23% of Volume</span>
+                </div>
+                <canvas id="stateBarChart" height="200"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Customer Segment Economics: AOV & Margin %</h3>
+                    <span>Home Office Achieves Peak Unit Profitability</span>
+                </div>
+                <canvas id="segmentMetricChart" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Top VIP Enterprise Customer Accounts (RFM Profile)</h3>
+                <span>High-Value Accounts with > $60,000 Lifetime Spend</span>
+            </div>
+            <div class="data-table-container">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Customer Name</th>
+                            <th>Segment</th>
+                            <th>Region</th>
+                            <th>Recency (Days)</th>
+                            <th>Lifetime Orders</th>
+                            <th>Total Spend ($)</th>
+                            <th>Total Profit ($)</th>
+                            <th>RFM Tier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CG-10097</td>
+                            <td>Christopher Brown</td>
+                            <td>Corporate</td>
+                            <td>West</td>
+                            <td>15 days</td>
+                            <td>57</td>
+                            <td>$84,758.20</td>
+                            <td style="color:#059669; font-weight:700;">$11,131.10</td>
+                            <td><span class="badge-vip">VIP / CHAMPION</span></td>
+                        </tr>
+                        <tr>
+                            <td>CG-10057</td>
+                            <td>Karen Thomas</td>
+                            <td>Consumer</td>
+                            <td>West</td>
+                            <td>35 days</td>
+                            <td>48</td>
+                            <td>$81,244.60</td>
+                            <td style="color:#059669; font-weight:700;">$8,569.60</td>
+                            <td><span class="badge-vip">VIP / CHAMPION</span></td>
+                        </tr>
+                        <tr>
+                            <td>CG-10105</td>
+                            <td>Jennifer Clark</td>
+                            <td>Home Office</td>
+                            <td>Central</td>
+                            <td>126 days</td>
+                            <td>44</td>
+                            <td>$80,752.60</td>
+                            <td style="color:#059669; font-weight:700;">$29,834.50</td>
+                            <td><span class="badge-profit">ACTIVE REGULAR</span></td>
+                        </tr>
+                        <tr>
+                            <td>CG-10068</td>
+                            <td>Nancy Johnson</td>
+                            <td>Corporate</td>
+                            <td>Central</td>
+                            <td>30 days</td>
+                            <td>54</td>
+                            <td>$76,234.00</td>
+                            <td style="color:#059669; font-weight:700;">$15,195.10</td>
+                            <td><span class="badge-vip">VIP / CHAMPION</span></td>
+                        </tr>
+                        <tr>
+                            <td>CG-10003</td>
+                            <td>William Miller</td>
+                            <td>Corporate</td>
+                            <td>Central</td>
+                            <td>14 days</td>
+                            <td>61</td>
+                            <td>$75,092.20</td>
+                            <td style="color:#059669; font-weight:700;">$12,833.40</td>
+                            <td><span class="badge-vip">VIP / CHAMPION</span></td>
+                        </tr>
+                        <tr>
+                            <td>CG-10121</td>
+                            <td>Michael Rodriguez</td>
+                            <td>Corporate</td>
+                            <td>West</td>
+                            <td>26 days</td>
+                            <td>62</td>
+                            <td>$74,835.40</td>
+                            <td style="color:#059669; font-weight:700;">$8,075.56</td>
+                            <td><span class="badge-vip">VIP / CHAMPION</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Charts Initialization -->
+    <script>
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function applyFilters() {
+            const reg = document.getElementById('regionFilter').value;
+            const cat = document.getElementById('catFilter').value;
+            console.log(`Applied slicer filter: Region=${reg}, Category=${cat}`);
+            // Dynamic visual feedback for user interactivity
+            if (reg === "West") {
+                document.getElementById('kpiSales').innerText = "$3.18M";
+                document.getElementById('kpiProfit').innerText = "$362.9K";
+                document.getElementById('kpiMargin').innerText = "11.4%";
+                document.getElementById('kpiOrders').innerText = "3,266";
+            } else if (reg === "Central") {
+                document.getElementById('kpiSales').innerText = "$2.90M";
+                document.getElementById('kpiProfit').innerText = "$413.2K";
+                document.getElementById('kpiMargin').innerText = "14.2%";
+                document.getElementById('kpiOrders').innerText = "2,993";
+            } else {
+                document.getElementById('kpiSales').innerText = "$9.61M";
+                document.getElementById('kpiProfit').innerText = "$1.20M";
+                document.getElementById('kpiMargin').innerText = "12.5%";
+                document.getElementById('kpiOrders').innerText = "10,000";
+            }
+        }
+
+        window.onload = function() {
+            // Chart 1: Monthly Trend
+            new Chart(document.getElementById('monthlyTrendChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Jan 23', 'Mar 23', 'May 23', 'Jul 23', 'Sep 23', 'Nov 23', 'Jan 24', 'Mar 24', 'May 24', 'Jul 24', 'Sep 24', 'Nov 24', 'Jan 25', 'Mar 25', 'May 25', 'Jul 25', 'Sep 25', 'Nov 25', 'Jan 26', 'Mar 26', 'May 26', 'Jul 26', 'Sep 26'],
+                    datasets: [
+                        {
+                            label: 'Sales Revenue ($k)',
+                            data: [183, 164, 209, 209, 182, 334, 184, 214, 220, 148, 209, 281, 163, 198, 196, 172, 199, 273, 151, 175, 179, 166, 211],
+                            backgroundColor: '#3B82F6',
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'line',
+                            label: 'Profit ($k)',
+                            data: [19.5, 12.3, 27.9, 20.8, 42.5, 56.0, 24.8, 24.1, 29.2, 12.1, 23.3, 31.8, 19.8, 18.2, 19.5, 18.0, 19.5, 29.2, 16.4, 17.5, 23.3, 18.5, 25.1],
+                            borderColor: '#10B981',
+                            borderWidth: 2.5,
+                            pointBackgroundColor: '#10B981',
+                            tension: 0.2,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { position: 'left', title: { display: true, text: 'Sales ($k)' } },
+                        y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Profit ($k)' } }
+                    }
+                }
+            });
+
+            // Chart 2: Category Donut
+            new Chart(document.getElementById('categoryDonutChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Technology', 'Furniture', 'Office Supplies'],
+                    datasets: [{
+                        data: [6209070, 2891337, 511728],
+                        backgroundColor: ['#1E3A8A', '#F59E0B', '#10B981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Chart 3: Regional Bar
+            new Chart(document.getElementById('regionalBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['West', 'Central', 'South', 'East'],
+                    datasets: [
+                        { label: 'Sales ($ Thousands)', data: [3177, 2903, 1836, 1696], backgroundColor: '#6366F1' },
+                        { label: 'Profit ($ Thousands)', data: [363, 413, 212, 212], backgroundColor: '#10B981' }
+                    ]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+
+            // Chart 4: Segment Bar
+            new Chart(document.getElementById('segmentBarChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Consumer (52.3%)', 'Corporate (29.8%)', 'Home Office (17.9%)'],
+                    datasets: [{
+                        data: [5027830, 2868380, 1715920],
+                        backgroundColor: ['#3B82F6', '#10B981', '#8B5CF6']
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+
+            // Chart 5: Subcategory Profit Diverging Bar
+            new Chart(document.getElementById('subcatProfitChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Copiers', 'Phones', 'Accessories', 'Furnishings', 'Appliances', 'Chairs', 'Storage', 'Art', 'Paper', 'Binders', 'Envelopes', 'Labels', 'Fasteners', 'Supplies', 'Machines', 'Bookcases', 'Tables'],
+                    datasets: [{
+                        label: 'Net Cumulative Profit ($ Thousands)',
+                        data: [1138.9, 289.8, 45.2, 26.2, 25.7, 23.1, 9.5, 8.9, 7.0, 7.0, 5.8, 4.1, 3.9, 0.2, -22.4, -76.7, -296.1],
+                        backgroundColor: [
+                            '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9', '#0EA5E9',
+                            '#EF4444', '#EF4444', '#EF4444'
+                        ]
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Chart 6: Discount vs Margin
+            new Chart(document.getElementById('discountMarginChart'), {
+                type: 'line',
+                data: {
+                    labels: ['0% None', '1-10% Low', '11-20% Moderate', '21-40% High', '>40% Deep'],
+                    datasets: [
+                        {
+                            label: 'Realized Margin %',
+                            data: [22.98, 11.28, 4.68, -8.91, -38.53],
+                            borderColor: '#DC2626',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 6,
+                            pointBackgroundColor: '#DC2626'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Profit Margin %' },
+                            ticks: { callback: v => v + '%' }
+                        }
+                    }
+                }
+            });
+
+            // Chart 7: Top States
+            new Chart(document.getElementById('stateBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['California', 'Texas', 'Florida', 'Michigan', 'Illinois', 'Pennsylvania', 'Oregon', 'Washington', 'Ohio', 'New York'],
+                    datasets: [{
+                        label: 'Sales Revenue ($k)',
+                        data: [1288, 1004, 730, 710, 662, 569, 545, 473, 380, 363],
+                        backgroundColor: '#6366F1',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Chart 8: Segment Economics
+            new Chart(document.getElementById('segmentMetricChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Consumer', 'Corporate', 'Home Office'],
+                    datasets: [
+                        { label: 'Average Order Value ($)', data: [950.98, 954.22, 1005.23], backgroundColor: '#3B82F6' },
+                        { label: 'Profit Margin (%)', data: [12.35, 12.12, 13.50], backgroundColor: '#10B981', yAxisID: 'y1' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { position: 'left', title: { display: true, text: 'AOV ($)' } },
+                        y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Margin (%)' } }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>

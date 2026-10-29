@@ -1,0 +1,185 @@
+// ==============================================================================
+// RETAIL SALES ANALYTICS - MASTER DAX MEASURES LIBRARY
+// Enterprise Power BI Semantic Model
+// ==============================================================================
+
+// ------------------------------------------------------------------------------
+// 1. CORE FINANCIAL & OPERATIONAL KPIS
+// ------------------------------------------------------------------------------
+
+[Total Sales] = 
+SUM(fact_sales[Sales])
+/* Total gross transaction revenue generated after discounts */
+
+[Total Profit] = 
+SUM(fact_sales[Profit])
+/* Total net bottom-line profit realized */
+
+[Profit Margin %] = 
+DIVIDE([Total Profit], [Total Sales], 0)
+/* Normalized profitability ratio */
+
+[Total Quantity] = 
+SUM(fact_sales[Quantity])
+/* Total physical units sold */
+
+[Total Orders] = 
+DISTINCTCOUNT(fact_sales[Order_ID])
+/* Unique count of customer purchase orders */
+
+[Total Customers] = 
+DISTINCTCOUNT(fact_sales[Customer_ID])
+/* Unique count of transacting customer accounts */
+
+[Average Order Value] = 
+DIVIDE([Total Sales], [Total Orders], 0)
+/* Mean revenue realized per discrete purchase order */
+
+[Average Fulfillment Days] = 
+AVERAGE(fact_sales[Order_to_Ship_Days])
+/* Mean days elapsed from order placement to carrier dispatch */
+
+[Average Discount %] = 
+AVERAGE(fact_sales[Discount])
+/* Mean discount applied across all order lines */
+
+
+// ------------------------------------------------------------------------------
+// 2. TIME INTELLIGENCE & PERIOD-OVER-PERIOD ANALYSIS
+// ------------------------------------------------------------------------------
+
+[Sales YTD] = 
+TOTALYTD([Total Sales], dim_date[Date_Key])
+/* Year-to-date cumulative revenue */
+
+[Profit YTD] = 
+TOTALYTD([Total Profit], dim_date[Date_Key])
+/* Year-to-date cumulative net profit */
+
+[Sales Prior Year (PY)] = 
+CALCULATE(
+    [Total Sales], 
+    SAMEPERIODLASTYEAR(dim_date[Date_Key])
+)
+/* Revenue generated in matching prior year period */
+
+[Profit Prior Year (PY)] = 
+CALCULATE(
+    [Total Profit], 
+    SAMEPERIODLASTYEAR(dim_date[Date_Key])
+)
+/* Net profit realized in matching prior year period */
+
+[YoY Sales Growth %] = 
+DIVIDE(
+    [Total Sales] - [Sales Prior Year (PY)], 
+    [Sales Prior Year (PY)], 
+    0
+)
+/* Year-over-Year revenue expansion rate */
+
+[YoY Profit Growth %] = 
+DIVIDE(
+    [Total Profit] - [Profit Prior Year (PY)], 
+    ABS([Profit Prior Year (PY)]), 
+    0
+)
+/* Year-over-Year net profit growth rate */
+
+[Sales Prior Month (PM)] = 
+CALCULATE(
+    [Total Sales], 
+    DATEADD(dim_date[Date_Key], -1, MONTH)
+)
+/* Revenue from immediately preceding calendar month */
+
+[MoM Sales Growth %] = 
+DIVIDE(
+    [Total Sales] - [Sales Prior Month (PM)], 
+    [Sales Prior Month (PM)], 
+    0
+)
+/* Month-over-Month revenue expansion rate */
+
+[Sales 3M Rolling Avg] = 
+CALCULATE(
+    AVERAGEX(
+        DATESINPERIOD(dim_date[Date_Key], LASTDATE(dim_date[Date_Key]), -3, MONTH),
+        [Total Sales]
+    )
+)
+/* 3-month trailing moving average to smooth monthly seasonality */
+
+
+// ------------------------------------------------------------------------------
+// 3. PRODUCT & PROFITABILITY DIAGNOSTICS
+// ------------------------------------------------------------------------------
+
+[Unprofitable Lines Count] = 
+CALCULATE(
+    COUNTROWS(fact_sales), 
+    fact_sales[Profit] < 0
+)
+/* Total order lines transacted at a negative margin */
+
+[Unprofitable Lines %] = 
+DIVIDE([Unprofitable Lines Count], COUNTROWS(fact_sales), 0)
+/* Proportion of order lines transacting at an operational loss */
+
+[Gross Margin Bleed] = 
+CALCULATE(
+    SUM(fact_sales[Profit]), 
+    fact_sales[Profit] < 0
+)
+/* Total dollar losses incurred across loss-making transactions */
+
+[Potential Margin Reclaimed (Cap @ 20% Discount)] = 
+CALCULATE(
+    ABS(SUM(fact_sales[Profit])), 
+    fact_sales[Discount] > 0.20,
+    fact_sales[Profit] < 0
+)
+/* Quantified EBITDA upside recovered by restricting discounts to 20% max */
+
+
+// ------------------------------------------------------------------------------
+// 4. CUSTOMER SEGMENTATION & RFM SCORES
+// ------------------------------------------------------------------------------
+
+[Orders Per Customer] = 
+DIVIDE([Total Orders], [Total Customers], 0)
+/* Mean order frequency per customer */
+
+[Sales Per Customer] = 
+DIVIDE([Total Sales], [Total Customers], 0)
+/* Mean lifetime spend per customer entity */
+
+[VIP Customer Sales] = 
+CALCULATE(
+    [Total Sales], 
+    FILTER(
+        VALUES(fact_sales[Customer_ID]), 
+        [Total Sales] >= 50000
+    )
+)
+/* Total revenue derived exclusively from enterprise accounts (> $50,000 spend) */
+
+
+// ------------------------------------------------------------------------------
+// 5. DYNAMIC REPORT HEADERS & CONDITIONAL FORMATTING
+// ------------------------------------------------------------------------------
+
+[Dynamic Report Title] = 
+VAR SelectedCat = SELECTEDVALUE(dim_product[Category], "All Categories")
+VAR SelectedReg = SELECTEDVALUE(dim_geography[Region], "All Regions")
+RETURN
+"Executive Performance: " & SelectedCat & " | " & SelectedReg
+
+[Profit Margin Color KPI] = 
+SWITCH(
+    TRUE(),
+    [Profit Margin %] >= 0.20, "#10B981", // Emerald (Healthy)
+    [Profit Margin %] >= 0.10, "#3B82F6", // Blue (Acceptable)
+    [Profit Margin %] >= 0.00, "#F59E0B", // Amber (Vulnerable)
+    "#EF4444"                             // Red (Loss-Making)
+)
