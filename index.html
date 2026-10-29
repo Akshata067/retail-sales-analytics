@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Enterprise Retail Sales & Profitability Analytics portfolio using Python, SQL, Excel, and Power BI.">
+  <title>Global Retail Corp — End-to-End Retail Data Analytics Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="#hero" class="nav-logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        <span>Global Retail Analytics</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#overview" class="active">Overview</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#tech-stack">Tech Stack</a></li>
+        <li><a href="#insights">Insights & Charts</a></li>
+        <li><a href="#showcase">Code & Queries</a></li>
+        <li><a href="#roadmap">Action Plan</a></li>
+        <li><a href="#docs">Docs & Downloads</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="power_bi/dashboard_mockup.html" target="_blank" class="btn btn-primary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+          </svg>
+          Live Dashboard
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <div class="container hero-content">
+      <div class="hero-badge-row">
+        <span class="tech-badge python">Python 3.12 (Pandas &amp; Seaborn)</span>
+        <span class="tech-badge sql">SQLite 3 (Star Schema &amp; Windows)</span>
+        <span class="tech-badge excel">Microsoft Excel (Financial Models)</span>
+        <span class="tech-badge powerbi">Power BI (DAX &amp; Interactive BI)</span>
+      </div>
+      <h1 class="hero-title">
+        Enterprise Retail Sales &amp;<br><span>Profitability Analytics</span>
+      </h1>
+      <p class="hero-subtitle">
+        An end-to-end commercial analytics portfolio dissecting <strong>$9.61M in revenue</strong> across <strong>10,039 transactions</strong>. Uncovers structural profit bleed in furniture, identifies <strong>$253.96K in reclaimable EBITDA</strong> from unconstrained discounting, and models multi-year growth opportunities.
+      </p>
+      <div class="hero-cta">
+        <a href="power_bi/dashboard_mockup.html" target="_blank" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          Launch Power BI Web Dashboard
+        </a>
+        <a href="#insights" class="btn btn-secondary">Explore Key Insights &amp; Charts</a>
+        <a href="excel/Retail_Sales_Analysis.xlsx" download class="btn btn-secondary">Download Excel Model (.xlsx)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive KPI Ribbon -->
+  <section class="kpi-section">
+    <div class="container">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Gross Sales Revenue</div>
+          <div class="kpi-val counter-anim" data-target="9.61" data-prefix="$" data-suffix="M" data-decimals="2">$0.00M</div>
+          <div class="kpi-desc">Total Invoiced (46 Months)</div>
+        </div>
+        <div class="kpi-card emerald">
+          <div class="kpi-label">Total Net Profit</div>
+          <div class="kpi-val counter-anim" data-target="1.20" data-prefix="$" data-suffix="M" data-decimals="2">$0.00M</div>
+          <div class="kpi-desc">Realized Bottom-Line</div>
+        </div>
+        <div class="kpi-card emerald">
+          <div class="kpi-label">Operating Margin</div>
+          <div class="kpi-val counter-anim" data-target="12.49" data-suffix="%" data-decimals="2">0.00%</div>
+          <div class="kpi-desc">Benchmark: 15.00% Target</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Purchase Orders</div>
+          <div class="kpi-val counter-anim" data-target="10000" data-decimals="0">0</div>
+          <div class="kpi-desc">10,039 Order Line Items</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Average Order Value</div>
+          <div class="kpi-val counter-anim" data-target="961.21" data-prefix="$" data-decimals="2">$0.00</div>
+          <div class="kpi-desc">Mean Revenue / Order</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-label">Reclaimable EBITDA</div>
+          <div class="kpi-val counter-anim" data-target="253.96" data-prefix="+$" data-suffix="K" data-decimals="2">+$0.00K</div>
+          <div class="kpi-desc">Via 20% Discount Ceiling</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Business Problem & Questions -->
+  <section id="overview" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Executive Context</span>
+        <h2 class="section-title">The Commercial Problem &amp; Core Inquiries</h2>
+        <p class="section-subtitle">
+          Global Retail Corp achieved record revenue across 4 US regions, yet operational profit margin remained capped at 12.49%, falling short of the 15.00% executive target.
+        </p>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-item active">
+          <button class="accordion-header">
+            <span>1. Monthly Seasonality &amp; Trajectory Trends</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            How have revenue and profit margins trended month-over-month, and what seasonality curves emerge during Q4 holiday shopping? Historical data reveals dramatic November/December surges averaging over $330,000 monthly, with consistent positive cash flows across all 46 operating months.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>2. Product Sub-Category Profitability &amp; The "Profit Drag"</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            Which product lines generate cash vs. which operate as chronic loss-makers? Technology Copiers generates $1.14M in net profit (33.9% margin), whereas Furniture Tables (-$296.1K) and Bookcases (-$76.7K) suffer severe negative margins due to excessive promotional discounting combined with bulky freight shipping costs.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>3. Discount Elasticity &amp; Margin Destruction Thresholds</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            At what exact discount rate does transactional margin turn negative? Undiscounted orders achieve 22.98% margin. Margins decline to 11.28% (low tier) and 4.68% (moderate tier), then collapse into steep negative losses (-8.91% and -38.53%) when discounts exceed 20%.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>4. Geographic Territory Performance &amp; State Rankings</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            Which regions yield the highest volume versus highest profit efficiency? The West leads volume ($3.18M, 33.1% share), but the Central region delivers peak operating margin efficiency (14.23%, $413.2K profit), anchored by high-performing corporate hubs in Texas and Michigan.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>5. Customer Segment Unit Economics &amp; RFM Profiling</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            How do Consumer, Corporate, and Home Office segments compare? Consumer accounts for 52.3% of volume ($5.03M). However, Home Office accounts achieve both the highest ticket size ($1,005.23 AOV) and the highest net margin (13.50%), representing prime targets for specialized VIP loyalty programs.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>6. Quantified Pro-Forma EBITDA Reclamation Plan</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            What actionable commercial policies will recover lost profit? Enforcing a 20% discount ceiling (+ $253.96K), adding a $35–$60 freight surcharge on heavy furniture (+ $95K), and scaling enterprise copier fleet leasing (+ $180K) generates an estimated + $638.96K in annualized profit expansion (+ 53.2% increase).
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4-Tool Technology Architecture -->
+  <section id="tech-stack" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Enterprise Toolchain</span>
+        <h2 class="section-title">Harmonized 4-Tool Analytics Stack</h2>
+        <p class="section-subtitle">
+          Every KPI, formula, and aggregation is verified with consistent mathematical definitions across Python, SQL, Excel, and Power BI.
+        </p>
+      </div>
+
+      <div class="tools-grid">
+        <!-- Python -->
+        <div class="tool-card">
+          <div class="tool-icon python">🐍</div>
+          <h3 class="tool-title">Python Analytics</h3>
+          <p class="tool-desc">
+            Automates end-to-end data pipelines: deduplication, text normalization, null imputation, feature engineering, and statistical visual generation.
+          </p>
+          <ul class="tool-highlights">
+            <li>Pandas, NumPy, Matplotlib &amp; Seaborn</li>
+            <li>Cleaned 10,039 records &amp; handled currency symbols</li>
+            <li>Engineered 9 analytical attributes &amp; discount tiers</li>
+            <li>Published 5 publication-ready 300 DPI figures</li>
+          </ul>
+          <a href="#showcase" class="btn btn-secondary btn-sm" onclick="switchShowcaseTab('tab-python')">View Python Code</a>
+        </div>
+
+        <!-- SQL -->
+        <div class="tool-card">
+          <div class="tool-icon sql">🗄️</div>
+          <h3 class="tool-title">Relational SQL</h3>
+          <p class="tool-desc">
+            Executes multi-dimensional analytical queries over a normalized Star Schema stored in an embedded SQLite 3 relational database.
+          </p>
+          <ul class="tool-highlights">
+            <li>Star Schema: 1 Fact &amp; 4 Dimension tables</li>
+            <li>Window functions: <code>LAG()</code>, <code>AVG() OVER</code>, <code>DENSE_RANK()</code></li>
+            <li>Calculates MoM/YoY growth rates &amp; rolling averages</li>
+            <li>Customer RFM scoring &amp; VIP account tiers</li>
+          </ul>
+          <a href="#showcase" class="btn btn-secondary btn-sm" onclick="switchShowcaseTab('tab-sql')">View SQL Queries</a>
+        </div>
+
+        <!-- Excel -->
+        <div class="tool-card">
+          <div class="tool-icon excel">📊</div>
+          <h3 class="tool-title">Microsoft Excel</h3>
+          <p class="tool-desc">
+            A production-ready financial model workbook built with <code>openpyxl</code>, featuring dynamic formulas, conditional formatting, and executive summary cards.
+          </p>
+          <ul class="tool-highlights">
+            <li>6 tabs with corporate navy executive styling</li>
+            <li>Dynamic <code>=SUMIFS()</code>, <code>=COUNTIF()</code>, <code>=AVERAGEIF()</code></li>
+            <li>Automated <code>=IF()</code> health status badges</li>
+            <li>Formatted currencies, percentages &amp; freeze panes</li>
+          </ul>
+          <a href="excel/Retail_Sales_Analysis.xlsx" download class="btn btn-secondary btn-sm">Download .xlsx</a>
+        </div>
+
+        <!-- Power BI -->
+        <div class="tool-card">
+          <div class="tool-icon powerbi">📈</div>
+          <h3 class="tool-title">Power BI &amp; DAX</h3>
+          <p class="tool-desc">
+            Comprehensive business intelligence design including Ralph Kimball dimensional modeling, 25+ DAX measures, and an interactive HTML web mockup.
+          </p>
+          <ul class="tool-highlights">
+            <li>Star Schema with 1:N single cross-filtering</li>
+            <li>25+ DAX formulas (Time intelligence, YTD, YoY, MoM)</li>
+            <li>3-page visual wireframes &amp; design system</li>
+            <li>1-Click Power BI Data Source connector (.pbids)</li>
+          </ul>
+          <a href="power_bi/dashboard_mockup.html" target="_blank" class="btn btn-primary btn-sm">Open Web BI</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow Timeline -->
+  <section id="workflow" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Project Lifecycle</span>
+        <h2 class="section-title">8-Stage End-to-End Pipeline Workflow</h2>
+        <p class="section-subtitle">
+          Executed via a single automated runner (<code>run_pipeline.py</code>) completing data synthesis, cleaning, database ETL, query execution, and Excel compilation in ~20 seconds.
+        </p>
+      </div>
+
+      <div class="workflow-timeline">
+        <div class="timeline-step">
+          <span class="step-num">1</span>
+          <h4 class="step-title">Goal Definition</h4>
+          <p class="step-text">Formulate business problem, baseline KPIs, and 6 strategic questions covering profitability and logistics.</p>
+        </div>
+        <div class="timeline-step">
+          <span class="step-num">2</span>
+          <h4 class="step-title">Raw Data Ingestion</h4>
+          <p class="step-text">Synthesize 10,150 realistic transactions spanning 46 months with real-world formatting anomalies and dirty fields.</p>
+        </div>
+        <div class="timeline-step">
+          <span class="step-num">3</span>
+          <h4 class="step-title">Python Cleaning</h4>
+          <p class="step-text">Deduplicate 111 rows, resolve 203 missing postal codes, clean currency symbols, and engineer 9 analytical features.</p>
+        </div>
+        <div class="timeline-step">
+          <span class="step-num">4</span>
+          <h4 class="step-title">Exploratory EDA</h4>
+          <p class="step-text">Render 5 publication-ready charts (Seaborn &amp; Matplotlib) visualizing trends, elasticity, and geographic spread.</p>
+        </div>
+        <div class="timeline-step">
+          <span class="step-num">5</span>
+          <h4 class="step-title">SQL Relational ETL</h4>
+          <p class="step-text">Build Star Schema in SQLite 3; execute window functions for MoM growth, rolling averages, and RFM scores.</p>
+        </div>
+        <div class="timeline-step">
+          <span class="step-num">6</span>
+          <h4 class="step-title">Excel Financial Model</h4>
+          <p class="step-text">Compile 6-tab formatted workbook (.xlsx) with dynamic SUMIFS formulas, conditional formatting, and KPI cards.</p>
+        </div>
+        <div class="timeline-step">
+          <span class="step-num">7</span>
+          <h4 class="step-title">Power BI Architecture</h4>
+          <p class="step-text">Author 25+ DAX measures, design 3-page interactive layouts, and build standalone web dashboard replica.</p>
+        </div>
+        <div class="timeline-step">
+          <span class="step-num">8</span>
+          <h4 class="step-title">Strategic Roadmap</h4>
+          <p class="step-text">Quantify +$638.96K in EBITDA recovery and establish phased 30-90-180 day commercial action plan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Insights & Figures Gallery -->
+  <section id="insights" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Empirical Evidence</span>
+        <h2 class="section-title">Key Business Findings &amp; Visual Gallery</h2>
+        <p class="section-subtitle">
+          Every conclusion is derived strictly from the dataset. Click any chart thumbnail below to expand a high-resolution preview and analytical commentary.
+        </p>
+      </div>
+
+      <!-- 4 Strategic Findings Cards -->
+      <div class="findings-grid">
+        <div class="finding-card">
+          <span class="finding-pill danger">Critical Profit Bleed</span>
+          <h3 class="finding-title">Discounts &gt; 20% Destroy Operating Margins</h3>
+          <p class="finding-body">
+            Orders transacted with zero discount produce an exceptional 22.98% margin. However, orders discounted over 20% collapse to -8.91% and -38.53% net margin. 1,585 distressed lines generated -$253,959 in cumulative losses.
+          </p>
+          <div class="finding-stat">
+            <strong>Reclamation Upside:</strong> +$253,959 EBITDA reclaimed by enforcing a hard 20% discount cap.
+          </div>
+        </div>
+
+        <div class="finding-card">
+          <span class="finding-pill danger">Structural Loss Drag</span>
+          <h3 class="finding-title">Furniture Tables &amp; Bookcases Lose -$372.8K</h3>
+          <p class="finding-body">
+            Tables (-$296,061 profit) and Bookcases (-$76,723 profit) suffer severe negative margins (-21.6% and -20.1%). Bulky freight shipping costs combined with promotional price cuts turn these sub-categories into heavy loss-leaders.
+          </p>
+          <div class="finding-stat">
+            <strong>Reclamation Upside:</strong> +$95,000 EBITDA recovered via a $35–$60 heavy item freight surcharge.
+          </div>
+        </div>
+
+        <div class="finding-card">
+          <span class="finding-pill success">Star Engine</span>
+          <h3 class="finding-title">Copiers Deliver 94.9% of Company Net Profit</h3>
+          <p class="finding-body">
+            Technology Copiers generated $3,359,820 in sales and $1,138,940 in net profit (33.90% margin). Canon ImageRunner and HP LaserJet enterprise copiers are the single largest contributors to firm cash flow.
+          </p>
+          <div class="finding-stat">
+            <strong>Growth Upside:</strong> +$180,000 profit expansion by scaling 3-year recurring B2B copier leasing contracts.
+          </div>
+        </div>
+
+        <div class="finding-card">
+          <span class="finding-pill warning">High-Yield Segment</span>
+          <h3 class="finding-title">Home Office Leads in Ticket Size &amp; Margin</h3>
+          <p class="finding-body">
+            While Consumer drives volume (52.3%), Home Office buyers achieve the highest Average Order Value ($1,005.23 AOV vs Consumer $950.98) and highest net margin (13.50%), making them ideal candidates for premium bundles.
+          </p>
+          <div class="finding-stat">
+            <strong>Target Action:</strong> Launch dedicated Home Office VIP loyalty program for the 119 top enterprise accounts.
+          </div>
+        </div>
+      </div>
+
+      <!-- 5-Chart Interactive Gallery -->
+      <h3 style="font-size: 20px; font-weight: 700; color: var(--secondary); margin-bottom: 20px; text-align: center;">
+        Publication-Grade Figures Gallery (Click to Inspect)
+      </h3>
+
+      <div class="gallery-grid">
+        <!-- Figure 1 -->
+        <div class="gallery-card" data-fig="fig1">
+          <div class="gallery-img-wrap">
+            <img src="reports/figures/01_monthly_sales_profit_trend.png" alt="Monthly Sales and Profit Trend" loading="lazy">
+          </div>
+          <div class="gallery-info">
+            <h4 class="gallery-title">Figure 1: Monthly Time Series &amp; Seasonality</h4>
+            <p class="gallery-caption">Dual-axis analysis showing Q4 holiday volume surges across 2023–2026.</p>
+          </div>
+        </div>
+
+        <!-- Figure 2 -->
+        <div class="gallery-card" data-fig="fig2">
+          <div class="gallery-img-wrap">
+            <img src="reports/figures/02_category_subcategory_profit.png" alt="Sub-Category Profitability Matrix" loading="lazy">
+          </div>
+          <div class="gallery-info">
+            <h4 class="gallery-title">Figure 2: Subcategory Profit Matrix</h4>
+            <p class="gallery-caption">Diverging bar chart isolating Copiers (+$1.14M) from Tables (-$296.1K).</p>
+          </div>
+        </div>
+
+        <!-- Figure 3 -->
+        <div class="gallery-card" data-fig="fig3">
+          <div class="gallery-img-wrap">
+            <img src="reports/figures/03_discount_vs_profit_margin.png" alt="Discount vs Profit Margin Box Plot" loading="lazy">
+          </div>
+          <div class="gallery-info">
+            <h4 class="gallery-title">Figure 3: Discount Elasticity Threshold</h4>
+            <p class="gallery-caption">Box plot illustrating margin erosion past the 20% break-even threshold.</p>
+          </div>
+        </div>
+
+        <!-- Figure 4 -->
+        <div class="gallery-card" data-fig="fig4">
+          <div class="gallery-img-wrap">
+            <img src="reports/figures/04_regional_performance.png" alt="Regional Performance Comparison" loading="lazy">
+          </div>
+          <div class="gallery-info">
+            <h4 class="gallery-title">Figure 4: Regional Territory Economics</h4>
+            <p class="gallery-caption">West leads in volume ($3.18M), while Central delivers peak margin (14.2%).</p>
+          </div>
+        </div>
+
+        <!-- Figure 5 -->
+        <div class="gallery-card" data-fig="fig5">
+          <div class="gallery-img-wrap">
+            <img src="reports/figures/05_customer_segment_distribution.png" alt="Customer Segment Distribution" loading="lazy">
+          </div>
+          <div class="gallery-info">
+            <h4 class="gallery-title">Figure 5: Customer Segment Economics</h4>
+            <p class="gallery-caption">Volume share donut chart paired with Average Order Value comparison.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Showcase (Tabbed Interface) -->
+  <section id="showcase" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Technical Depth</span>
+        <h2 class="section-title">Implementation Code &amp; Query Showcase</h2>
+        <p class="section-subtitle">
+          Explore the exact Python scripts, SQL window function queries, Excel formula logic, and Power BI DAX expressions powering this portfolio.
+        </p>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-python">Python Cleaning Pipeline</button>
+        <button class="tab-btn" data-tab="tab-sql">SQL Window Queries</button>
+        <button class="tab-btn" data-tab="tab-excel">Excel Financial Model</button>
+        <button class="tab-btn" data-tab="tab-powerbi">Power BI &amp; DAX Measures</button>
+      </div>
+
+      <!-- Tab 1: Python -->
+      <div id="tab-python" class="tab-content active">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--secondary);">
+          Automated Cleaning &amp; Feature Engineering (<code>src/data_cleaning.py</code>)
+        </h3>
+        <p style="font-size: 14px; color: var(--slate); margin-bottom: 12px;">
+          Ingests raw CSV data, deduplicates records, resolves missing postal codes via geographical state-city lookups, standardizes mixed-case strings, and computes essential business features.
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>src/data_cleaning.py (Core Transformation Logic)</span>
+            <button class="copy-btn">Copy Code</button>
+          </div>
+          <pre><code># 1. Currency & Numeric Cleaning
+df["Sales"] = df["Sales"].apply(clean_currency).round(2)
+df["Profit"] = df["Profit"].apply(clean_currency).round(2)
+df["Quantity"] = pd.to_numeric(df["Quantity"], errors="coerce").fillna(1).astype(int)
+df["Discount"] = pd.to_numeric(df["Discount"], errors="coerce").fillna(0.0).round(2)
+
+# 2. Impute Missing Postal Codes via State-City Lookup
+geo_lookup = df[~df["Postal_Code"].isna()][["State", "City", "Postal_Code"]].drop_duplicates(subset=["State", "City"]).set_index(["State", "City"])["Postal_Code"].to_dict()
+df["Postal_Code"] = df.apply(lambda r: geo_lookup.get((r["State"], r["City"]), "90001") if pd.isna(r["Postal_Code"]) else str(r["Postal_Code"])[:5], axis=1)
+
+# 3. Feature Engineering: Margins, Unit Prices, and Calendar Dimensions
+df["Profit_Margin"] = np.where(df["Sales"] > 0, (df["Profit"] / df["Sales"]).round(4), 0.0)
+df["Unit_Price"] = (df["Sales"] / (df["Quantity"] * (1.0 - df["Discount"]).replace(0.0, 0.01))).round(2)
+df["Order_Year"] = df["Order_Date"].dt.year
+df["Order_Month_Year"] = df["Order_Date"].dt.strftime("%Y-%m")
+df["Order_to_Ship_Days"] = (df["Ship_Date"] - df["Order_Date"]).dt.days
+
+# 4. Segment into Elasticity Discount Tiers
+bins = [-0.01, 0.00, 0.10, 0.20, 0.40, 1.00]
+labels = ["0% None", "1-10% Low", "11-20% Moderate", "21-40% High", ">40% Deep"]
+df["Discount_Tier"] = pd.cut(df["Discount"], bins=bins, labels=labels)</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab 2: SQL -->
+      <div id="tab-sql" class="tab-content">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--secondary);">
+          Advanced SQL Window Functions (<code>sql/02_revenue_profit_trends.sql</code>)
+        </h3>
+        <p style="font-size: 14px; color: var(--slate); margin-bottom: 12px;">
+          Calculates Month-over-Month (MoM) revenue growth using <code>LAG()</code>, a 3-month trailing moving average using <code>ROWS BETWEEN 2 PRECEDING AND CURRENT ROW</code>, and running cumulative sales totals.
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>sql/02_revenue_profit_trends.sql</span>
+            <button class="copy-btn">Copy Code</button>
+          </div>
+          <pre><code>WITH monthly_metrics AS (
+    SELECT 
+        Order_Month_Year,
+        COUNT(DISTINCT Order_ID) AS Total_Orders,
+        ROUND(SUM(Sales), 2) AS Monthly_Sales,
+        ROUND(SUM(Profit), 2) AS Monthly_Profit,
+        ROUND((SUM(Profit) / SUM(Sales)) * 100.0, 2) AS Profit_Margin_Pct
+    FROM retail_sales
+    GROUP BY Order_Month_Year
+)
+SELECT 
+    Order_Month_Year,
+    Total_Orders,
+    Monthly_Sales,
+    Monthly_Profit,
+    Profit_Margin_Pct,
+    ROUND(((Monthly_Sales - LAG(Monthly_Sales, 1) OVER (ORDER BY Order_Month_Year)) 
+          / LAG(Monthly_Sales, 1) OVER (ORDER BY Order_Month_Year)) * 100.0, 2) AS MoM_Sales_Growth_Pct,
+    ROUND(AVG(Monthly_Sales) OVER (ORDER BY Order_Month_Year ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) AS Rolling_3M_Avg_Sales,
+    ROUND(SUM(Monthly_Sales) OVER (ORDER BY Order_Month_Year), 2) AS Cumulative_Sales
+FROM monthly_metrics
+ORDER BY Order_Month_Year;</code></pre>
+        </div>
+
+        <div class="table-responsive">
+          <table class="showcase-table">
+            <thead>
+              <tr>
+                <th>Month-Year</th>
+                <th>Orders</th>
+                <th>Monthly Sales</th>
+                <th>Monthly Profit</th>
+                <th>Margin %</th>
+                <th>MoM Growth %</th>
+                <th>Rolling 3M Avg</th>
+                <th>Cumulative Sales</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2023-01</td>
+                <td>211</td>
+                <td>$183,008</td>
+                <td>$19,528</td>
+                <td>10.67%</td>
+                <td>-</td>
+                <td>$183,008</td>
+                <td>$183,008</td>
+              </tr>
+              <tr>
+                <td>2023-02</td>
+                <td>156</td>
+                <td>$171,530</td>
+                <td>$33,439</td>
+                <td>19.49%</td>
+                <td>-6.27%</td>
+                <td>$177,269</td>
+                <td>$354,538</td>
+              </tr>
+              <tr>
+                <td>2023-03</td>
+                <td>198</td>
+                <td>$164,139</td>
+                <td>$12,340</td>
+                <td>7.52%</td>
+                <td>-4.31%</td>
+                <td>$172,893</td>
+                <td>$518,678</td>
+              </tr>
+              <tr>
+                <td>2023-11</td>
+                <td>289</td>
+                <td>$334,443</td>
+                <td>$56,044</td>
+                <td>16.76%</td>
+                <td>+32.07%</td>
+                <td>$256,690</td>
+                <td>$2,428,510</td>
+              </tr>
+              <tr>
+                <td>2023-12</td>
+                <td>291</td>
+                <td>$337,750</td>
+                <td>$60,054</td>
+                <td>17.78%</td>
+                <td>+0.99%</td>
+                <td>$308,476</td>
+                <td>$2,766,260</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Excel -->
+      <div id="tab-excel" class="tab-content">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--secondary);">
+          Microsoft Excel Multi-Tab Financial Model (<code>excel/Retail_Sales_Analysis.xlsx</code>)
+        </h3>
+        <p style="font-size: 14px; color: var(--slate); margin-bottom: 12px;">
+          The Excel model contains 6 structured worksheets incorporating native Excel formulas, executive KPI summary cards, dynamic pivot models, and automated health status evaluation.
+        </p>
+
+        <div class="workflow-timeline" style="margin-bottom: 24px;">
+          <div class="timeline-step">
+            <h4 class="step-title">1. Executive Summary</h4>
+            <p class="step-text">Features KPI summary cards with <code>=SUM()</code> and <code>=COUNT()</code> formulas linked to data, strategic takeaways, and category snapshot.</p>
+          </div>
+          <div class="timeline-step">
+            <h4 class="step-title">2. Cleaned Data</h4>
+            <p class="step-text">Formatted table of all 10,039 records with currency formatting (<code>$#,##0.00</code>), percentages, and frozen headers.</p>
+          </div>
+          <div class="timeline-step">
+            <h4 class="step-title">3. Pivot Monthly Trends</h4>
+            <p class="step-text">Monthly revenue and profit calculated via <code>=SUMIF()</code> with dynamic MoM growth percentages and cumulative running totals.</p>
+          </div>
+          <div class="timeline-step">
+            <h4 class="step-title">4. Product Performance</h4>
+            <p class="step-text">17 subcategories evaluated via <code>=SUMIFS()</code> with nested <code>=IF()</code> health tags: STAR PERFORMER vs LOSS MAKER.</p>
+          </div>
+        </div>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span>Dynamic Excel Formula Snippets</span>
+          </div>
+          <pre><code>// Dynamic Sub-Category Profit SUMIFS:
+=SUMIFS('Cleaned Data'!T2:T10040, 'Cleaned Data'!N2:N10040, B6, 'Cleaned Data'!O2:O10040, C6)
+
+// Automated Health Status Flag:
+=IF(G6 < 0, "LOSS MAKER", IF(H6 > 0.2, "STAR PERFORMER", "STABLE"))
+
+// Dynamic Average Lead Time Fulfillment:
+=AVERAGEIF('Cleaned Data'!L2:L10040, "West", 'Cleaned Data'!AC2:AC10040)</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab 4: Power BI -->
+      <div id="tab-powerbi" class="tab-content">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--secondary);">
+          Power BI Semantic Model &amp; DAX Measures (<code>power_bi/dax_measures.dax</code>)
+        </h3>
+        <p style="font-size: 14px; color: var(--slate); margin-bottom: 12px;">
+          Modeled in Ralph Kimball Star Schema architecture. Includes 25+ DAX measures encompassing Time Intelligence, Period-over-Period comparisons, and Loss Bleed diagnostics.
+        </p>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span>power_bi/dax_measures.dax (Selected DAX Measures)</span>
+            <button class="copy-btn">Copy DAX</button>
+          </div>
+          <pre><code>// Core KPIs
+[Total Sales] = SUM(fact_sales[Sales])
+[Total Profit] = SUM(fact_sales[Profit])
+[Profit Margin %] = DIVIDE([Total Profit], [Total Sales], 0)
+[Average Order Value] = DIVIDE([Total Sales], [Total Orders], 0)
+
+// Time Intelligence
+[Sales YTD] = TOTALYTD([Total Sales], dim_date[Date_Key])
+[Sales Prior Year (PY)] = CALCULATE([Total Sales], SAMEPERIODLASTYEAR(dim_date[Date_Key]))
+[YoY Sales Growth %] = DIVIDE([Total Sales] - [Sales Prior Year (PY)], [Sales Prior Year (PY)], 0)
+[Sales 3M Rolling Avg] = CALCULATE(AVERAGEX(DATESINPERIOD(dim_date[Date_Key], LASTDATE(dim_date[Date_Key]), -3, MONTH), [Total Sales]))
+
+// Loss Bleed & EBITDA Reclamation
+[Unprofitable Lines Count] = CALCULATE(COUNTROWS(fact_sales), fact_sales[Profit] < 0)
+[Gross Margin Bleed] = CALCULATE(SUM(fact_sales[Profit]), fact_sales[Profit] < 0)
+[Potential Margin Reclaimed (Cap @ 20% Discount)] = CALCULATE(ABS(SUM(fact_sales[Profit])), fact_sales[Discount] > 0.20, fact_sales[Profit] < 0)</code></pre>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px;">
+          <a href="power_bi/dashboard_mockup.html" target="_blank" class="btn btn-primary">
+            Open Interactive Power BI Browser Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Strategic Roadmap & EBITDA Impact -->
+  <section id="roadmap" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Executive Strategy</span>
+        <h2 class="section-title">Quantified EBITDA Upside &amp; 180-Day Roadmap</h2>
+        <p class="section-subtitle">
+          Executing these four targeted interventions unlocks an estimated <strong>+$638,959 in annual profit (+53.2% increase)</strong>, expanding corporate operating margin from 12.49% to 17.99%.
+        </p>
+      </div>
+
+      <div class="roadmap-grid">
+        <div class="roadmap-card">
+          <div class="roadmap-phase">Phase 1 (Days 0–30)</div>
+          <h3 class="roadmap-title">Immediate Triage &amp; Policy Caps</h3>
+          <ul class="roadmap-list">
+            <li><strong>Hard ERP Discount Ceiling:</strong> Program automated system restriction capping discounts at 20% max.</li>
+            <li><strong>Furniture Cap @ 10%:</strong> Require VP approval for discounts &gt; 10% on Tables and Bookcases.</li>
+            <li><strong>Daily Loss Monitor:</strong> Automated alert triggered whenever any order line logs <code>Profit &lt; 0</code>.</li>
+            <li><strong>Impact:</strong> Reclaims <strong>+$253,959 in EBITDA</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-card phase2">
+          <div class="roadmap-phase">Phase 2 (Days 31–90)</div>
+          <h3 class="roadmap-title">Logistics &amp; Product Bundling</h3>
+          <ul class="roadmap-list">
+            <li><strong>Heavy Freight Surcharge:</strong> Implement $35–$60 pass-through shipping surcharge on heavy furniture.</li>
+            <li><strong>High-Margin Bundling:</strong> Pair loss-making desks with high-margin tech accessories (Logitech mouse @ 42% margin).</li>
+            <li><strong>Home Office Loyalty Tier:</strong> Target the 119 top accounts with customized corporate hardware bundles.</li>
+            <li><strong>Impact:</strong> Reclaims <strong>+$95,000 in EBITDA</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-card phase3">
+          <div class="roadmap-phase">Phase 3 (Days 91–180)</div>
+          <h3 class="roadmap-title">Fleet Expansion &amp; Growth</h3>
+          <ul class="roadmap-list">
+            <li><strong>Copier Fleet Contracts:</strong> Scale 3-year recurring toner and service contracts on Canon &amp; HP copiers.</li>
+            <li><strong>Regional Headcount Rebalance:</strong> Deploy dedicated commercial B2B sales reps to Texas, California, and Michigan hubs.</li>
+            <li><strong>Inventory Hub Optimization:</strong> Establish Dallas &amp; LA staging hubs to reduce LTL transit delays.</li>
+            <li><strong>Impact:</strong> Expands profit by <strong>+$290,000 in EBITDA</strong>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Documentation & Downloads -->
+  <section id="docs" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Repository Files</span>
+        <h2 class="section-title">Project Documentation &amp; Artifact Directory</h2>
+        <p class="section-subtitle">
+          Direct links to all data files, scripts, workbooks, and documentation.
+        </p>
+      </div>
+
+      <div class="table-responsive">
+        <table class="showcase-table">
+          <thead>
+            <tr>
+              <th>Artifact Name</th>
+              <th>Format</th>
+              <th>Location</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Cleaned Transactions</strong></td>
+              <td><code>.csv</code></td>
+              <td><code>data/processed/retail_sales_clean.csv</code></td>
+              <td>10,039 validated, standardized, and enriched order lines.</td>
+            </tr>
+            <tr>
+              <td><strong>Data Dictionary</strong></td>
+              <td><code>.md</code></td>
+              <td><code>data/data_dictionary.md</code></td>
+              <td>Schema definitions, data types, business rules, and limitations.</td>
+            </tr>
+            <tr>
+              <td><strong>SQLite Database</strong></td>
+              <td><code>.db</code></td>
+              <td><code>database/retail_sales.db</code></td>
+              <td>Star Schema tables: <code>fact_sales</code>, dimension tables, and view.</td>
+            </tr>
+            <tr>
+              <td><strong>SQL Query Suite</strong></td>
+              <td><code>.sql</code></td>
+              <td><code>sql/</code> (6 Scripts)</td>
+              <td>Window functions, MoM growth, product rankings, and RFM profiles.</td>
+            </tr>
+            <tr>
+              <td><strong>SQL Results Summary</strong></td>
+              <td><code>.md</code></td>
+              <td><code>reports/sql_results_summary.md</code></td>
+              <td>Tabular markdown report of all executed SQL analytical queries.</td>
+            </tr>
+            <tr>
+              <td><strong>Excel Financial Model</strong></td>
+              <td><code>.xlsx</code></td>
+              <td><code>excel/Retail_Sales_Analysis.xlsx</code></td>
+              <td>6-tab formatted workbook with dynamic formulas and KPI cards.</td>
+            </tr>
+            <tr>
+              <td><strong>Power BI Connector</strong></td>
+              <td><code>.pbids</code></td>
+              <td><code>power_bi/retail_sales.pbids</code></td>
+              <td>1-Click data source launcher for Power BI Desktop.</td>
+            </tr>
+            <tr>
+              <td><strong>Power BI DAX Measures</strong></td>
+              <td><code>.dax</code></td>
+              <td><code>power_bi/dax_measures.dax</code></td>
+              <td>25+ formatted DAX measures with business logic commentary.</td>
+            </tr>
+            <tr>
+              <td><strong>Interactive BI Mockup</strong></td>
+              <td><code>.html</code></td>
+              <td><code>power_bi/dashboard_mockup.html</code></td>
+              <td>Responsive browser replica with interactive slicers and charts.</td>
+            </tr>
+            <tr>
+              <td><strong>Executive Insights Report</strong></td>
+              <td><code>.md</code></td>
+              <td><code>reports/executive_insights_and_recommendations.md</code></td>
+              <td>C-suite presentation, quantified EBITDA upside, and roadmap.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Quick Run Instructions Box -->
+      <div style="margin-top: 32px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: var(--secondary); margin-bottom: 12px;">
+          How to Run the Python Pipeline Locally
+        </h3>
+        <p style="font-size: 14px; color: var(--slate); margin-bottom: 12px;">
+          Execute all 6 stages (data synthesis, cleaning, EDA charts, database ETL, SQL queries, and Excel build) in ~20 seconds:
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>Terminal Execution Command</span>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code># Run via Python (Anaconda recommended):
+python run_pipeline.py
+
+# Alternatively on Windows, double-click:
+run_pipeline.bat</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal for Chart Preview -->
+  <div id="galleryModal" class="modal">
+    <div class="modal-content">
+      <button id="modalClose" class="modal-close">&times;</button>
+      <img id="modalImg" class="modal-img" src="" alt="Chart Preview">
+      <div class="modal-details">
+        <h3 id="modalTitle"></h3>
+        <p id="modalDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4 style="color: #fff; font-size: 17px;">Global Retail Corp &mdash; Data Portfolio</h4>
+          <p style="line-height: 1.6; margin-bottom: 16px;">
+            A multi-tool commercial analytics case study demonstrating end-to-end data engineering, relational SQL modeling, Excel financial forecasting, and Power BI interactive reporting.
+          </p>
+          <p style="color: #64748B;">Built with Python 3.12, SQLite 3, openpyxl &amp; Vanilla JavaScript.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Analytical Tools</h4>
+          <ul>
+            <li><a href="#showcase" onclick="switchShowcaseTab('tab-python')">Python (Pandas &amp; Seaborn)</a></li>
+            <li><a href="#showcase" onclick="switchShowcaseTab('tab-sql')">SQL (SQLite Star Schema)</a></li>
+            <li><a href="#showcase" onclick="switchShowcaseTab('tab-excel')">Excel (Financial Model)</a></li>
+            <li><a href="#showcase" onclick="switchShowcaseTab('tab-powerbi')">Power BI (DAX &amp; Reports)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Key Insights</h4>
+          <ul>
+            <li><a href="#insights">20% Discount Ceiling</a></li>
+            <li><a href="#insights">Furniture Margin Drag</a></li>
+            <li><a href="#insights">Copier Profit Leadership</a></li>
+            <li><a href="#insights">Home Office AOV Star</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Project Links</h4>
+          <ul>
+            <li><a href="power_bi/dashboard_mockup.html" target="_blank">Power BI Web Dashboard</a></li>
+            <li><a href="excel/Retail_Sales_Analysis.xlsx" download>Excel Workbook (.xlsx)</a></li>
+            <li><a href="reports/sql_results_summary.md">SQL Results Report</a></li>
+            <li><a href="reports/executive_insights_and_recommendations.md">Executive Strategy Report</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 Global Retail Corp &mdash; Retail Sales Data Analytics Project. MIT Licensed.</div>
+        <div>All 10,039 transactions analyzed reproducibly.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Helper to switch tab from outside the tabs container
+    function switchShowcaseTab(tabId) {
+      const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+      if (btn) btn.click();
+    }
+  </script>
+</body>
+</html>
