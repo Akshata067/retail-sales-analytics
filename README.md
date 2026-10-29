@@ -197,3 +197,4 @@ Implementing the recommendations provides an estimated **+$638,959.00 in annual 
 - **Power BI Layout & Wireframes**: [`power_bi/report_layout_and_visuals.md`](file:///c:/Users/Akshatha/OneDrive/Desktop/TIC%20TAC/retail_sales_analytics/power_bi/report_layout_and_visuals.md)
 - **Interactive Browser Mockup**: [`power_bi/dashboard_mockup.html`](file:///c:/Users/Akshatha/OneDrive/Desktop/TIC%20TAC/retail_sales_analytics/power_bi/dashboard_mockup.html)
 - **Executive Strategic Report**: [`reports/executive_insights_and_recommendations.md`](file:///c:/Users/Akshatha/OneDrive/Desktop/TIC%20TAC/retail_sales_analytics/reports/executive_insights_and_recommendations.md)
+website deployment setup
